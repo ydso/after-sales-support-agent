@@ -1,0 +1,39 @@
+collection_name: agent
+# Windows 下 Chroma 的原生 HNSW 文件不能可靠地写入含中文的路径。
+# 因此向量库放在纯 ASCII 公共数据目录；可通过同名环境变量覆盖。
+persist_directory: D:/agent-rag-data/chroma_db
+persist_directory_env: CHROMA_PERSIST_DIRECTORY
+k: 6
+
+# 混合检索先扩大候选集，再融合重排到最终 k 条资料。
+retrieval:
+  max_rewrites: 2
+  dense_candidates_per_query: 12
+  keyword_candidates: 12
+  fusion_candidates: 24
+  rrf_k: 60
+  original_query_weight: 1.0
+  rewritten_query_weight: 0.85
+  keyword_weight: 0.8
+  fusion_score_weight: 0.8
+  semantic_score_weight: 0.15
+  keyword_score_weight: 0.05
+
+# 当前测试库只有数百个分块。降低批处理和落盘阈值，避免默认值 1000
+# 导致首次导入结束后 HNSW 索引仍未同步到磁盘。
+hnsw:
+  space: l2
+  batch_size: 10
+  sync_threshold: 10
+
+# 知识文件目录。当前仅扫描这一层，不递归导入子目录。
+data_path: data
+allow_knowledge_file_type: ["txt", "pdf"]
+
+# 文件级导入清单：记录 SHA-256、文件状态以及每个文件的 Chroma 分块 ID。
+# 旧 md5.text 不再参与判断，可保留用于审计或手动归档。
+document_manifest_db: data/index/document_manifest.sqlite3
+
+chunk_size: 200
+chunk_overlap: 20
+separators: ["\n\n", "\n", ".", "。", "！", "!", "？", "?", "，", ",", "；", ";", "、", " ", ""]
