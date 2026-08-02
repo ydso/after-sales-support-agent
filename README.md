@@ -264,8 +264,8 @@ Query 改写会尽量保留型号、数字、缩写、故障码和否定含义�
 ### 1. 克隆项目
 
 ```bash
-git clone <your-repository-url>
-cd <your-repository-name>
+git clone https://github.com/ydso/after-sales-support-agent.git
+cd https://github.com/ydso/after-sales-support-agent.git
 ```
 
 ### 2. 安装 Python 与 uv
